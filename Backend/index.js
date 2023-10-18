@@ -23,3 +23,14 @@ app.listen(3000, ()=> {
 
 app.use('/Backend/user', userRouter);
 app.use('/Backend/auth', authRouter);
+
+//passed to auth.controller with next
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500;
+    const message = err.message || 'Internal Server Error';
+    return res.status(statusCode).json({
+        success: false,
+        statusCode,
+        message,
+    });
+});
