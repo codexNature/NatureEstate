@@ -18,13 +18,14 @@ const app = express();
 app.use(express.json());
 
 app.listen(3000, ()=> {
-    console.log('Server running on port 3k!!!');
+    console.log('Server running running runnning running on port 3k!!!');
 });
 
 app.use('/Backend/user', userRouter);
 app.use('/Backend/auth', authRouter);
 
-//passed to auth.controller with next
+
+//passed to auth.controller with "next" to handle errors
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
