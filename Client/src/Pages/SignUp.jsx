@@ -15,7 +15,6 @@ export default function SignUp() {
       [e.target.id]: e.target.value, // Use e.target.value to capture the input value
     });
   };
-    console.log(formData)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {

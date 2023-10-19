@@ -1,7 +1,7 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import { errorHandler } from '../utils/error.js';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 
 //Sign up function
