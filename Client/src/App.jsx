@@ -5,6 +5,7 @@ import SignUp from './Pages/SignUp';
 import About from './Pages/About';
 import Profile from './pages/Profile';
 import Header from './Components/Header';
+import PrivateRoute from './Components/PrivateRoute'; // This is a component that will be used to protect routes that require authentication.
 
 
 export default function App() {
@@ -16,8 +17,10 @@ export default function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/about" element={<About />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route element={<PrivateRoute />}>  
+            <Route path="/profile" element={<Profile />} />
+        </Route>
     </Routes>
     </BrowserRouter>
-  )
+  );
 }
