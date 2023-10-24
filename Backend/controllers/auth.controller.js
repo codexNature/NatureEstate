@@ -28,7 +28,7 @@ export const signup = async (req, res, next) => {
   } catch (error) {
     // Handle errors here
     next(error);
-  }
+  };
 };
 
 
@@ -56,8 +56,8 @@ export const signin = async (req, res, next) => {
 
   } catch (error) {
     next(error); //middleware created in the index.js file (Handles error)
-  }
-}
+  };
+};
 
 
 
@@ -92,5 +92,5 @@ export const google = async (req, res, next) => {
       }
     } catch (error) {
       next(error);
-    }
-}
+    };
+};
