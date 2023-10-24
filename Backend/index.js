@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
+import listingRouter from './routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 
 mongoose.connect(process.env.MONGO)
@@ -26,6 +27,8 @@ app.listen(3000, ()=> {
 
 app.use('/Backend/user', userRouter);
 app.use('/Backend/auth', authRouter);
+app.use('/Backend/listing', listingRouter);
+
 
 
 //passed to auth.controller with "next" to handle errors
