@@ -50,6 +50,18 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     }, // This will update the error state with the error message
+    signOutStart: (state, action) => {
+      state.loading = true;
+    }, // This will set the loading state to true.
+    signOutSuccess: (state, action) => {
+      state.currentUser = null;
+      state.loading = false;
+      state.error = null;
+    }, // This will update the currentUser state with the new user data
+    signOutFailure: (state, action) => {
+      state.error = action.payload;
+      state.loading = false;
+    }, // This will update the error state with the error message
   },
 });
   
@@ -63,7 +75,10 @@ const userSlice = createSlice({
     updateUserFailure,
     deleteUserStart,
     deleteUserSuccess,
-    deleteUserFailure, 
+    deleteUserFailure,
+    signOutStart,
+    signOutSuccess,
+    signOutFailure, 
   } = userSlice.actions;
 
   export default userSlice.reducer;

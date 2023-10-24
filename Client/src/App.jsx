@@ -3,7 +3,7 @@ import Home from './Pages/Home';
 import SignIn from './Pages/Signin';
 import SignUp from './Pages/SignUp';
 import About from './Pages/About';
-import Profile from './pages/Profile';
+import Profile from './Pages/Profile';
 import Header from './Components/Header';
 import PrivateRoute from './Components/PrivateRoute'; // This is a component that will be used to protect routes that require authentication.
 

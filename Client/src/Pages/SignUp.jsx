@@ -32,7 +32,6 @@ export default function SignUp() {
         });
 
       const data = await res.json(); // This will convert the response from the backend to JSON
-      console.log(data);
       if (data.success === false) {
         setLoading(false);
         setError(data.message);
