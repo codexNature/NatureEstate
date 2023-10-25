@@ -24,8 +24,6 @@ export default function SignIn() {
     try {
       //setLoading(true)
       dispatch(signinStart());  // This will set loading to true. replaced above code.
-
-
       // This is sending a request to the backend server (signin route)
       // Make sure you specify the correct URL
       const res = await fetch('/Backend/auth/signin', //This is called from auth.route.js
