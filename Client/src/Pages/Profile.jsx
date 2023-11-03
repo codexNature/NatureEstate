@@ -21,7 +21,7 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-
+import { set } from "mongoose";
 
 export default function Profile() {
   const fileRef = useRef(null);
@@ -31,6 +31,8 @@ export default function Profile() {
   const [fileUploafError, setFileUploafError] = useState(false); // This will be used to show any errors that occur during the file upload
   const [formData, setFormData] = useState({}); // This will be used to store the form data
   const [updateSuccess, setUpdateSuccess] = useState(false); // This will be used to show a success message when the user updates their profile
+  const [showListingsError, setShowListingsError] = useState(false); // This will be used to show the user's listings
+  const [userListings, setUserListings] = useState([]); // This will be used to store the user's listings
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -71,7 +73,8 @@ export default function Profile() {
     e.preventDefault(); // This will prevent the page from reloading when the form is submitted.
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`/Backend/user/update/${currentUser._id}`, { // This will call the update user route in the backend. update user route is in the user.route.js file
+      const res = await fetch(`/Backend/user/update/${currentUser._id}`, {
+        // This will call the update user route in the backend. update user route is in the user.route.js file
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +97,8 @@ export default function Profile() {
   const handleDeleteUser = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await fetch(`/Backend/user/delete/${currentUser._id}`, { // This will call the delete user route in the backend. delete user route is in the user.route.js file
+      const res = await fetch(`/Backend/user/delete/${currentUser._id}`, {
+        // This will call the delete user route in the backend. delete user route is in the user.route.js file
         method: "DELETE",
       });
       const data = await res.json();
@@ -120,6 +124,21 @@ export default function Profile() {
       dispatch(signOutSuccess(data));
     } catch (error) {
       dispatch(signOutFailure(error.message)); // This is from the userSlice.js file. This will update the error state with the error message
+    }
+  };
+
+  const handleShowListings = async () => {
+    try {
+      setShowListingsError(false);
+      const res = await fetch(`/Backend/user/listings/${currentUser._id}`); // Backticks are used here to allow us to use the currentUser._id variable in the URL
+      const data = await res.json(); // This will call the listings route in the backend. listings route is in the user.route.js file
+      if (data.success === false) {
+        setShowListingsError(true);
+        return;
+      }
+      setUserListings(data);
+    } catch (error) {
+      setShowListingsError(true);
     }
   };
 
@@ -214,6 +233,46 @@ export default function Profile() {
       <p className="text-green=700 mt-5">
         {updateSuccess ? "User profile, updated suucessfully!" : ""}
       </p>
+
+      <button onClick={handleShowListings} className="text-green-700 w-full">
+        Show Listings
+      </button>
+      <p className="text-red-700">
+        {showListingsError ? "Error showing listings" : ""}
+      </p>
+
+      {userListings && userListings.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Listings
+          </h1>
+          {userListings.map((listing) => (
+            <div
+              key={listing._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link to={`/listing/${listing._id}`}>
+                <img
+                  src={listing.imageURLs[0]} // This is called from the listing model in the backend
+                  alt="listing cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold  hover:underline truncate flex-1"
+                to={`/listing/${listing._id}`}
+              >
+                <p>{listing.name}</p>
+              </Link>
+
+              <div className="flex flex-col item-center">
+                <button className="text-red-700 uppercase">Delete</button>
+                <button className="text-green-700 uppercase">Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
