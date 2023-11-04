@@ -4,14 +4,15 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { app } from "../firebase"; // This will be used to upload the file to Firebase Storage
 import { useSelector } from "react-redux"; // This will be used to get the user from the Redux store
-import { useNavigate } from "react-router-dom"; // This will be used to navigate to a different route
+import { useNavigate, useParams } from "react-router-dom"; // This will be used to navigate to a different route
 
 const CreateListing = () => {
   const [files, setFiles] = useState([]);
   const navigate = useNavigate(); // We initialize the navigate hook
+  const params = useParams(); // We initialize the useParams hook
   const [formData, setFormData] = useState({
     imageURLs: [],
     name: "",
@@ -31,7 +32,22 @@ const CreateListing = () => {
   const [error, setError] = useState(false); // This will be used to show any errors that occur during the file upload
   const [loading, setLoading] = useState(false); // This will be used to show a success message when the user updates their profile
   const { currentUser } = useSelector((state) => state.user); // This will be used to show a success message when the user updates their profile
-  console.log(formData);
+  useEffect(() => {
+
+    const fetchListing = async () => {
+          const listingId = params.listingId;
+          const res = await fetch(`/Backend/listing/get/${listingId}`);
+          const data = await res.json();
+          if (data.success === false) {
+            console.log(data.message);
+            return;
+          }
+          setFormData(data);
+          
+  }
+
+    fetchListing();
+}, [params.listingId]);
 
   const handleImageSubmit = (e) => {
     if (files.length > 0 && files.length + formData.imageURLs.length < 7) {
@@ -149,7 +165,7 @@ const CreateListing = () => {
         );
       setLoading(true);
       setError(false);
-      const res = await fetch(`/Backend/listing/create`, {
+      const res = await fetch(`/Backend/listing/update/${params.listingId}`, {
         // This will send a POST request to the backend. create is the route we created in listing.route.js
         method: "POST",
         headers: {
@@ -175,7 +191,7 @@ const CreateListing = () => {
   return (
     <main className="p-3 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">
-        Create a Listing
+        Update Listing
       </h1>
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
         <div className="flex flex-col gap-4 flex-1">
@@ -380,7 +396,7 @@ const CreateListing = () => {
             disabled={loading || uploading}
             className="p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
           >
-            {loading ? "Creating..." : "Create Listing"}
+            {loading ? "Updating..." : "Update Listing"}
           </button>
           {error && <p className="text-red-700">{error}</p>}
         </div>
