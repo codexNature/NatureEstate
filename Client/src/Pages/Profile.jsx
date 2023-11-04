@@ -33,7 +33,7 @@ export default function Profile() {
   const [updateSuccess, setUpdateSuccess] = useState(false); // This will be used to show a success message when the user updates their profile
   const [showListingsError, setShowListingsError] = useState(false); // This will be used to show the user's listings
   const [userListings, setUserListings] = useState([]); // This will be used to store the user's listings
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); // This will be used to dispatch actions to the redux store
 
   useEffect(() => {
     if (file) {
