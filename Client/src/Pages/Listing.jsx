@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
+import { useSelector } from "react-redux";
 import "swiper/css/bundle";
 import {
   FaBath,
@@ -15,6 +16,7 @@ import {
   FaParking,
   FaShare,
 } from "react-icons/fa";
+import Contacts from "../Components/Contacts";
 
 export default function Listing() {
   SwiperCore.use([Navigation]);
@@ -22,6 +24,8 @@ export default function Listing() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
+  const [contact, setContact] = useState(false);
   const params = useParams();
   useEffect(() => {
     const fetchListing = async () => {
@@ -135,12 +139,20 @@ export default function Listing() {
                   {listing.furnished ? "Furnished" : "Not Furnished"}
                 </li>
               </ul>
+              {currentUser && listing.userRef !== currentUser._id && !contact && ( // The contact landlord button will only show if the user is logged in and the listing is not their own. Also the contact button will disappear if the contact button is clicked
+                <button
+                  onClick={() => setContact(true)}
+                  className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
+                >
+                  Contact Landlord
+                </button>
+              )}
+              {contact && <Contacts listing={listing}/>}
             </div>
           </>
         )}
     </main>
   );
 }
-
 
 //Line 131 - if parking is true, show Parking, else show No Parking

@@ -63,3 +63,17 @@ export const getUserLisitings = async (req, res, next) => {
     return next(errorHandler(401, "You can only get your own listings!"));
   }
 };
+
+export const getUser = async (req, res, next) => {
+  try { //This is to try and get the user
+    const user = await User.findById(req.params.id); //This is to get the user from the database using the id from the params in the url
+
+    if (!user) return next(errorHandler(404, "User not found!")); //This is to check if user exists
+
+    const { password, pass, ...rest } = user._doc; //This allows the user to be returned without the password
+
+    res.status(200).json(rest); // This returns the user without the password
+  } catch (error) {
+    next(error); //This is to catch any errors
+  }
+};
