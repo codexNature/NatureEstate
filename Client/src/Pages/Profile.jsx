@@ -21,7 +21,6 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { set } from "mongoose";
 
 export default function Profile() {
   const fileRef = useRef(null);
