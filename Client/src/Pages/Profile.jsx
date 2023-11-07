@@ -27,7 +27,7 @@ export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
   const [file, setFile] = useState(undefined);
   const [filePercent, setFilePercent] = useState(0); // This will be used to show the progress of the file upload
-  const [fileUploafError, setFileUploafError] = useState(false); // This will be used to show any errors that occur during the file upload
+  const [fileUploadError, setFileUploadError] = useState(false); // This will be used to show any errors that occur during the file upload
   const [formData, setFormData] = useState({}); // This will be used to store the form data
   const [updateSuccess, setUpdateSuccess] = useState(false); // This will be used to show a success message when the user updates their profile
   const [showListingsError, setShowListingsError] = useState(false); // This will be used to show the user's listings
@@ -54,7 +54,7 @@ export default function Profile() {
         setFilePercent(Math.round(progress));
       },
       (error) => {
-        setFileUploafError(true);
+        setFileUploadError(true);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -179,13 +179,13 @@ export default function Profile() {
         />
         <p className="text-sm self-center">
           {
-            fileUploafError ? (
+            fileUploadError ? (
               <span className="text-red-700">
                 Error Uploading Image.(Image must be less than 2MB){" "}
               </span>
             ) : filePercent > 0 && filePercent < 100 ? (
               <span className="text-slate-700">
-                {`Image uploading ${filePercent}%`}{" "}
+                {`Image uploading ${filePercent}%`}
               </span>
             ) : filePercent === 100 ? (
               <span className="text-green-700">

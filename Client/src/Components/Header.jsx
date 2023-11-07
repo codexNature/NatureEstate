@@ -30,7 +30,7 @@ export default function Header() {
           </Link>
           <Link to='/profile'>
           {currentUser ? (
-              <img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt="Profile" />
+              <img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt="Profile" /> // This will show the user avatar if the user is logged in, the avatar is stored in the redux store.
               ): (
             <li className='text-slate-700 hover:underline'>Sign In</li>
             )} 
