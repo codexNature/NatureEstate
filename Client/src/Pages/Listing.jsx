@@ -1,7 +1,7 @@
 // Desc: Listing page for a single listing
 import { set } from "mongoose";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 import { Navigation } from "swiper/modules";
@@ -15,6 +15,7 @@ import {
   FaMapMarkedAlt,
   FaParking,
   FaShare,
+  FaBackward,
 } from "react-icons/fa";
 import Contacts from "../Components/Contacts";
 
@@ -72,6 +73,11 @@ export default function Listing() {
                 </SwiperSlide>
               ))}
             </Swiper>
+            <div className="fixed top-[13%] left-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer">
+              <Link to="/profile">
+                <FaBackward className="text-slate-500" />
+              </Link>
+            </div>
             <div className="fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer">
               <FaShare
                 className="text-slate-500"
@@ -139,15 +145,17 @@ export default function Listing() {
                   {listing.furnished ? "Furnished" : "Not Furnished"}
                 </li>
               </ul>
-              {currentUser && listing.userRef !== currentUser._id && !contact && ( // The contact landlord button will only show if the user is logged in and the listing is not their own. Also the contact button will disappear if the contact button is clicked
-                <button
-                  onClick={() => setContact(true)}
-                  className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
-                >
-                  Contact Landlord
-                </button>
-              )}
-              {contact && <Contacts listing={listing}/>}
+              {currentUser &&
+                listing.userRef !== currentUser._id &&
+                !contact && ( // The contact landlord button will only show if the user is logged in and the listing is not their own. Also the contact button will disappear if the contact button is clicked
+                  <button
+                    onClick={() => setContact(true)}
+                    className="bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 p-3"
+                  >
+                    Contact Landlord
+                  </button>
+                )}
+              {contact && <Contacts listing={listing} />}
             </div>
           </>
         )}
