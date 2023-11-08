@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ListingItem from "../Components/ListingItem";
 
 export default function Search() {
   const navigate = useNavigate(); // This will be used to navigate to the search page.
@@ -114,8 +115,7 @@ export default function Search() {
   return (
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-b-2 md:border-r-2 md:min-h-screen">
-        <form onSubmit={handleSubmit} 
-        className="flex flex-col gap-8">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-8">
           <div className="flex items-center gap-2 ">
             <label className="whitespace-nowrap font-semibold">
               Search Term
@@ -214,11 +214,27 @@ export default function Search() {
           </button>
         </form>
       </div>
-      <div className="">
+      <div className="flex-1">
         <h1 className="text-3xl font-semibold border-b p-3 text-slate-700 mt-5">
           Listing Results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {!loading && listings.length === 0 && (
+            <p className="text-xl text-slate-700">No Listing found!</p> // This will check if the listings are not loading and if the length of the listings is 0 and if it is, it will display a message saying that no listings were found.
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading...
+            </p> // This will check if the listings are loading and if it is, it will display a message saying that the listings are loading.
+          )}
+
+          {
+            !loading && listings && listings.map((listing) => (
+                  <ListingItem key={listing._id} listing={listing}/>)) // This will check if the listings are not loading and if the listings exist and if it does, it will map through the listings and display the listings. 
+          }
+        </div>
       </div>
     </div>
   );
 }
+
