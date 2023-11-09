@@ -16,10 +16,9 @@ export default function Search() {
 
   const [loading, setLoading] = useState(true); // This will be used to check if the listings are loading.
   const [listings, setListings] = useState([]); // This will be used to store the listings. The default value is an empty array.
-  console.log(listings)
+  const [showMore, setShowMore] = useState(false); // This will be used to check if the show more button is clicked.
 
   useEffect(() => {
-
     const urlParams = new URLSearchParams(location.search); // This will get the search term from the url ans save it in the url variable.
     const searchTermFromUrl = urlParams.get("searchTerm"); // This will get the search term from the url to input it in the search bar.
     const typesFromUrl = urlParams.get("types"); // This will get the type from the url to set the type in the sidebar.
@@ -29,8 +28,7 @@ export default function Search() {
     const sortFromUrl = urlParams.get("sort"); // This will get the sort from the url to set the sort in the sidebar.
     const orderFromUrl = urlParams.get("order"); // This will get the order from the url to set the order in the sidebar.
 
-
-  if(
+    if (
       searchTermFromUrl ||
       typesFromUrl ||
       furnishedFromUrl ||
@@ -48,16 +46,21 @@ export default function Search() {
         sort: sortFromUrl || "created_at",
         order: orderFromUrl || "desc",
       }); // This will set the search term, type, parking, furnished, offer, sort and order to the search term, type, parking, furnished, offer, sort and order that is in the url. If the search term, type, parking, furnished, offer, sort or order is not in the url, the search term, type, parking, furnished, offer, sort or order will be set to the default value.
-      
     }
 
     const fetchListings = async () => {
-          setLoading(true); // This will set the loading to true.
-          const searchQuery = urlParams.toString(); // This will convert the search term to a string.
-          const res = await fetch(`/Backend/listing/get?${searchQuery}`); // This will fetch the listings from the backend.
-          const data = await res.json(); // This will convert the response to json.
-          setListings(data); // This will set the listings to the data that we got from the backend.
-          setLoading(false); // This will set the loading to false.
+      setLoading(true); // This will set the loading to true.
+      setShowMore(false); // This will set the show more to false.
+      const searchQuery = urlParams.toString(); // This will convert the search term to a string.
+      const res = await fetch(`/Backend/listing/get?${searchQuery}`); // This will fetch the listings from the backend.
+      const data = await res.json(); // This will convert the response to json.
+      if (data.length > 8) {
+        setShowMore(true); // This will set the show more to true if the length of the data is greater than 8.
+      } else{
+        setShowMore(false); // This will set the show more to false if the length of the data is less than 8.
+      }
+      setListings(data); // This will set the listings to the data that we got from the backend.
+      setLoading(false); // This will set the loading to false.
     };
 
     fetchListings(); // This will run the fetchListings function.
@@ -96,10 +99,9 @@ export default function Search() {
     }
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault(); // This will prevent the default behaviour of the form which is to refresh the page when the form is submitted.
-    const urlParams = new URLSearchParams();// This will get the search term from the url ans save it in the url variable.
+    const urlParams = new URLSearchParams(); // This will get the search term from the url ans save it in the url variable.
     urlParams.set("searchTerm", sidebarData.searchTerm); // This will set the search term in the url to the search term that the user entered.
     urlParams.set("types", sidebarData.types); // This will set the type in the url to the type that the user selected.
     urlParams.set("furnished", sidebarData.furnished); // This will set the furnished in the url to the furnished that the user selected.
@@ -109,8 +111,21 @@ export default function Search() {
     urlParams.set("order", sidebarData.order); // This will set the order in the url to the order that the user selected.
     const searchQuery = urlParams.toString(); // This will convert the search term to a string.
     navigate(`/search?${searchQuery}`); // This will navigate to the search page with the search term in the url.
-  }
+  };
 
+    const onShowMoreClick = async () => {
+    const numberOfListings = listings.length; // This will get the number of listings.
+    const startIndex = numberOfListings; // This will get the start index.
+    const urlParams = new URLSearchParams(location.search); // This will get the search term from the url ans save it in the url variable.
+    urlParams.set("startIndex", startIndex); // This will set the start index in the url to the start index.
+    const searchQuery = urlParams.toString(); // This will convert the search term to a string.
+    const res = await fetch(`/Backend/listing/get?${searchQuery}`); // This will fetch the listings from the backend.
+    const data = await res.json(); // This will convert the response to json.
+    if (data.length < 9) {
+      setShowMore(false); // This will set the show more to false if the length of the data is less than 9.
+    }
+    setListings([...listings, ...data]); // TThis will keep the old listings and add the new listings to the listings.
+  }; 
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -229,12 +244,24 @@ export default function Search() {
           )}
 
           {
-            !loading && listings && listings.map((listing) => (
-                  <ListingItem key={listing._id} listing={listing}/>)) // This will check if the listings are not loading and if the listings exist and if it does, it will map through the listings and display the listings. 
+            !loading &&
+              listings &&
+              listings.map((listing) => (
+                <ListingItem key={listing._id} listing={listing} />
+              )) // This will check if the listings are not loading and if the listings exist and if it does, it will map through the listings and display the listings.
           }
+          {showMore && (
+            <button
+              onClick={() => {
+                onShowMoreClick();
+              }}
+              className="text-green-700 hover:underline p-7 w-full text-center"
+            >
+              Show More
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
-

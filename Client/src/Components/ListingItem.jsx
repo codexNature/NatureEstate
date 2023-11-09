@@ -4,10 +4,14 @@ import { MdLocationOn } from "react-icons/md";
 export default function ListingItem({ listing }) {
   // listing is the prop passed in from the parent component in search.jsx in the map function
   return (
-    <div className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
-      <Link to={`/listing/${listing.id}`}>
+    <div
+    className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full sm:w-[330px]">
+      <Link to={`/listing/${listing._id}`}>  
         <img
-          src={listing.imageURLs[0] || "https://landwey.ng/wp-content/uploads/2019/10/house-and-key-on-wooden-table-on-sunlight-background-building-concept-concept-of-selling-real-estate-1138190269-563869f4765c46a3a194e83d80ca61eb.jpg" } 
+          src={
+            listing.imageURLs[0] ||
+            "https://landwey.ng/wp-content/uploads/2019/10/house-and-key-on-wooden-table-on-sunlight-background-building-concept-concept-of-selling-real-estate-1138190269-563869f4765c46a3a194e83d80ca61eb.jpg"
+          }
           alt="listing cover"
           className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300 ease-in-out"
         />
@@ -25,13 +29,22 @@ export default function ListingItem({ listing }) {
             <p className="text-sm text-gray -600 line-clamp-2">
               {listing.description}{" "}
             </p>
-            <p className="text-slate-500 mt-2 font-semibold">
-              $
-              {listing.offer
-                ? listing.discountedPrice.toLocaleString("en-us")
-                : listing.regularPrice.toLocaleString("en-us")}
-              {listing.type === "rent" && "/month"}
-            </p>
+            <div className="flex flex-row gap-4">
+              <p className="text-slate-500 mt-2 font-semibold">
+                $
+                {listing.offer
+                  ? listing.discountedPrice.toLocaleString("en-us") // if there is an offer, show the discounted price and strike through the regular price
+                  : listing.regularPrice.toLocaleString("en-us")}
+                {listing.type === "rent" && "/month"}
+              </p>
+              <p className="font-semibold mt-2 line-through text-gray-600">
+                {listing.offer && (
+                  <span className="text-red-700 mt-2 font-semibold">
+                    ${listing.regularPrice.toLocaleString("en-us")}
+                  </span>
+                )}
+              </p>
+            </div>
             <div className="flex gap-3 text-slate-700">
               <div className="font-bold text-xs">
                 {listing.bedrooms > 1
