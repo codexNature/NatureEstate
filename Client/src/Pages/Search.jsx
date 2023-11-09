@@ -6,7 +6,7 @@ export default function Search() {
   const navigate = useNavigate(); // This will be used to navigate to the search page.
   const [sidebarData, setSidebarData] = useState({
     searchTerm: "",
-    types: "all",
+    type: "all",
     furnished: false,
     parking: false,
     offer: false,
@@ -14,14 +14,14 @@ export default function Search() {
     order: "desc",
   }); // This will be used to store the data that will be used to filter the listings. The default values are set to the values that will be used to get all the listings.
 
-  const [loading, setLoading] = useState(true); // This will be used to check if the listings are loading.
+  const [loading, setLoading] = useState(false); // This will be used to check if the listings are loading.
   const [listings, setListings] = useState([]); // This will be used to store the listings. The default value is an empty array.
   const [showMore, setShowMore] = useState(false); // This will be used to check if the show more button is clicked.
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search); // This will get the search term from the url ans save it in the url variable.
     const searchTermFromUrl = urlParams.get("searchTerm"); // This will get the search term from the url to input it in the search bar.
-    const typesFromUrl = urlParams.get("types"); // This will get the type from the url to set the type in the sidebar.
+    const typeFromUrl = urlParams.get("type"); // This will get the type from the url to set the type in the sidebar.
     const furnishedFromUrl = urlParams.get("furnished"); // This will get the furnished from the url to set the furnished in the sidebar.
     const parkingFromUrl = urlParams.get("parking"); // This will get the parking from the url to set the parking in the sidebar.
     const offerFromUrl = urlParams.get("offer"); // This will get the offer from the url to set the offer in the sidebar.
@@ -30,7 +30,7 @@ export default function Search() {
 
     if (
       searchTermFromUrl ||
-      typesFromUrl ||
+      typeFromUrl ||
       furnishedFromUrl ||
       parkingFromUrl ||
       offerFromUrl ||
@@ -39,7 +39,7 @@ export default function Search() {
     ) {
       setSidebarData({
         searchTerm: searchTermFromUrl || "",
-        type: typesFromUrl || "all",
+        type: typeFromUrl || "all",
         parking: parkingFromUrl === "true" ? true : false,
         furnished: furnishedFromUrl === "true" ? true : false,
         offer: offerFromUrl === "true" ? true : false,
@@ -72,7 +72,7 @@ export default function Search() {
       e.target.id === "rent" ||
       e.target.id === "sale"
     ) {
-      setSidebarData({ ...sidebarData, types: e.target.id });
+      setSidebarData({ ...sidebarData, type: e.target.id });
     } // This will check if the type is all, rent or sale and set the type to the type that the user selected.
 
     if (e.target.id === "searchTerm") {
@@ -103,7 +103,7 @@ export default function Search() {
     e.preventDefault(); // This will prevent the default behaviour of the form which is to refresh the page when the form is submitted.
     const urlParams = new URLSearchParams(); // This will get the search term from the url ans save it in the url variable.
     urlParams.set("searchTerm", sidebarData.searchTerm); // This will set the search term in the url to the search term that the user entered.
-    urlParams.set("types", sidebarData.types); // This will set the type in the url to the type that the user selected.
+    urlParams.set("type", sidebarData.type); // This will set the type in the url to the type that the user selected.
     urlParams.set("furnished", sidebarData.furnished); // This will set the furnished in the url to the furnished that the user selected.
     urlParams.set("parking", sidebarData.parking); // This will set the parking in the url to the parking that the user selected.
     urlParams.set("offer", sidebarData.offer); // This will set the offer in the url to the offer that the user selected.
@@ -145,13 +145,13 @@ export default function Search() {
             />
           </div>
           <div className="flex gap-2 flex-wrap items-center">
-            <label className=" font-semibold">Types:</label>
+            <label className=" font-semibold">Type:</label>
             <div className="flex gap-2">
               <input
                 type="checkbox"
                 id="all"
                 className="w-5"
-                checked={sidebarData.types === "all"}
+                checked={sidebarData.type === "all"}
                 onChange={handleChange}
               />
               <span>Rent & Sale</span>
@@ -161,7 +161,7 @@ export default function Search() {
                 type="checkbox"
                 id="rent"
                 className="w-5"
-                checked={sidebarData.types === "rent"} // This will check if the type is rent.
+                checked={sidebarData.type === "rent"} // This will check if the type is rent.
                 onChange={handleChange}
               />
               <span>Rent</span>
@@ -171,7 +171,7 @@ export default function Search() {
                 type="checkbox"
                 id="sale"
                 className="w-5"
-                checked={sidebarData.types === "sale"} // This will check if the type is sale.
+                checked={sidebarData.type === "sale"} // This will check if the type is sale.
                 onChange={handleChange}
               />
               <span>Sale</span>
@@ -243,8 +243,7 @@ export default function Search() {
             </p> // This will check if the listings are loading and if it is, it will display a message saying that the listings are loading.
           )}
 
-          {
-            !loading &&
+          {!loading &&
               listings &&
               listings.map((listing) => (
                 <ListingItem key={listing._id} listing={listing} />
