@@ -13,7 +13,7 @@ mongoose.connect(process.env.MONGO)
     console.log("Conected to DB");
     }).catch((err) => {
         console.log(err)
-    })
+    });
 
 const __dirname = path.resolve();
 
@@ -34,10 +34,10 @@ app.use('/Backend/auth', authRouter);
 app.use('/Backend/listing', listingRouter);
 
 
-app.use(express.static(path.join(__dirname, "client", "dist")));
+app.use(express.static(path.join(__dirname, "/Client/dist")));
 
 app.get('', (req, res) => {
-    res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+    res.sendFile(path.join(__dirname, "Client", "dist", "index.html"));
 });
 
 
